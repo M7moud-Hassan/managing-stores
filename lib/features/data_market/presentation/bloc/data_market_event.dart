@@ -26,3 +26,7 @@ class GetAllItemsEvent extends DataMarketEvent {
   final String catalogue;
   const GetAllItemsEvent({required this.catalogue});
 }
+
+class OpenDrawerEvent extends DataMarketEvent {}
+
+class CloseDrawerEvent extends DataMarketEvent {}

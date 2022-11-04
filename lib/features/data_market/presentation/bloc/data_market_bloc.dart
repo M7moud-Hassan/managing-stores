@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/error/failures.dart';
 import 'package:mustafa/core/strings/failures.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
@@ -42,10 +43,14 @@ class DataMarketBloc extends Bloc<DataMarketEvent, DataMarketState> {
         result = await getAllItems(event.catalogue);
         result.fold((l) => emit(ErrorMessageState(message: _mapError(l))),
             (r) => emit(GetAllItemsState(items: r)));
+      } else if (event is OpenDrawerEvent) {
+        emit(OpenDrawerState());
+      } else if (event is CloseDrawerEvent) {
+        emit(CloseDrawerState());
       }
     });
   }
-
+  static DataMarketBloc get(context) => BlocProvider.of(context);
   String _mapError(Failure failure) {
     switch (failure.runtimeType) {
       case OfflineFailure:

@@ -24,3 +24,7 @@ class ErrorMessageState extends DataMarketState {
   final String message;
   const ErrorMessageState({required this.message});
 }
+
+class OpenDrawerState extends DataMarketState {}
+
+class CloseDrawerState extends DataMarketState {}
