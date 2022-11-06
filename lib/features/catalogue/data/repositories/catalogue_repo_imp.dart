@@ -14,7 +14,8 @@ class CatalogueRepoImp implements CatalogueRepo {
   @override
   Future<Either<Failure, Unit>> addCatalogue(Catalogue catalogue) async {
     try {
-      return Right(await localDataCatalogue.add(catalogue as ModelCatalogue));
+      return Right(await localDataCatalogue
+          .add(ModelCatalogue(name: catalogue.name, id: catalogue.id)));
     } on OfflineException {
       return Left(OfflineFailure());
     } on ServerException {

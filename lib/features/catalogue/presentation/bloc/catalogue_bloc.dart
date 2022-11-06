@@ -30,6 +30,7 @@ class CatalogueBloc extends Bloc<CatalogueEvent, CatalogueState> {
       }
     });
   }
+  static CatalogueBloc get(context) => BlocProvider.of<CatalogueBloc>(context);
   String _mapError(Failure failure) {
     switch (failure.runtimeType) {
       case OfflineFailure:

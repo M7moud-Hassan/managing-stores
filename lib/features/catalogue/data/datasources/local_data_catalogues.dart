@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mustafa/core/error/exceptions.dart';
 import 'package:mustafa/core/network/network_info.dart';
 import 'package:mustafa/features/catalogue/data/models/model_catalogue.dart';
+import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 
 abstract class LocalDataCatalogue {
   Future<Unit> add(ModelCatalogue modelCatalogue);
