@@ -33,4 +33,28 @@ class CatalogueRepoImp implements CatalogueRepo {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> renameCatalogue(Catalogue catalogue) async {
+    try {
+      return Right(await localDataCatalogue
+          .reName(ModelCatalogue(name: catalogue.name, id: catalogue.id)));
+    } on OfflineException {
+      return Left(OfflineFailure());
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteCatalogue(Catalogue catalogue) async {
+    try {
+      return Right(await localDataCatalogue
+          .delete(ModelCatalogue(name: catalogue.name, id: catalogue.id)));
+    } on OfflineException {
+      return Left(OfflineFailure());
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 }

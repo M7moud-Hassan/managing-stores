@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mustafa/features/catalogue/presentation/bloc/catalogue_bloc.dart';
+import 'package:mustafa/features/catalogue/presentation/bloc/sheet_catalogue/sheet_add_catalogue_bloc.dart';
 import 'package:mustafa/features/catalogue/presentation/pages/drawer_catalogue_page.dart';
 import 'package:mustafa/features/data_market/presentation/bloc/data_market_bloc.dart';
+import 'features/catalogue/presentation/bloc/catalogue_add/catalogue_bloc.dart';
 import 'injections/injection_mark_data.dart' as di;
 import 'injections/injection_catalogue.dart' as di2;
 import 'injections/injection_mark_data.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<CatalogueBloc>()..add(GetCatalougesEvent()),
+        ),
+        BlocProvider(
+          create: (context) => SheetAddCatalogueBloc(),
         ),
       ],
       child: const MaterialApp(
