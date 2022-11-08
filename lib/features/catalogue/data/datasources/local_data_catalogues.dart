@@ -11,7 +11,7 @@ abstract class LocalDataCatalogue {
   Future<Unit> delete(ModelCatalogue modelCatalogue);
 }
 
-const COLLECTION = "cataloguse";
+const String COLLECTION = "cataloguse";
 
 class LocalDataCatalogueImp implements LocalDataCatalogue {
   final FirebaseFirestore firebaseFirestore;
@@ -24,13 +24,17 @@ class LocalDataCatalogueImp implements LocalDataCatalogue {
   @override
   Future<Unit> add(ModelCatalogue modelCatalogue) async {
     if (await networkInfo.isConnected) {
-      try {
-        await firebaseFirestore
-            .collection("cataloguse")
-            .add(modelCatalogue.toJson());
-        return Future.value(unit);
-      } catch (e) {
-        throw ServerException();
+      if (!await _checkExists(modelCatalogue.name)) {
+        try {
+          await firebaseFirestore
+              .collection(COLLECTION)
+              .add(modelCatalogue.toJson());
+          return Future.value(unit);
+        } catch (e) {
+          throw ServerException();
+        }
+      } else {
+        throw CatalogueIsExitsException();
       }
     } else {
       throw OfflineException();
@@ -88,6 +92,20 @@ class LocalDataCatalogueImp implements LocalDataCatalogue {
       }
     } else {
       throw OfflineException();
+    }
+  }
+
+  Future<bool> _checkExists(name) async {
+    try {
+      AggregateQuerySnapshot query = await firebaseFirestore
+          .collection(COLLECTION)
+          .where("name", isEqualTo: name)
+          .count()
+          .get();
+
+      return query.count > 0;
+    } catch (e) {
+      throw ServerException();
     }
   }
 }

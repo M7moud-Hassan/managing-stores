@@ -9,7 +9,11 @@ abstract class CatalogueState extends Equatable {
 
 class CatalogueInitial extends CatalogueState {}
 
-class AddedCatalogueState extends CatalogueState {}
+class AddedCatalogueState extends CatalogueState {
+  final String message;
+
+  const AddedCatalogueState({required this.message});
+}
 
 class MessageErrorState extends CatalogueState {
   final String massage;
@@ -21,6 +25,24 @@ class MessageErrorState extends CatalogueState {
 class GetedCataloguesState extends CatalogueState {
   final List<Catalogue> catalogues;
   const GetedCataloguesState({required this.catalogues});
+  @override
+  List<Object> get props => [catalogues];
+}
+
+class LoadingCataloguesState extends CatalogueState {
+  final Catalogue changeIdSelected;
+  final bool changeId;
+  const LoadingCataloguesState({
+    required this.changeIdSelected,
+    required this.changeId,
+  });
+  @override
+  List<Object> get props => [changeIdSelected, changeId];
+}
+
+class FilterCataloguesState extends CatalogueState {
+  final List<Catalogue> catalogues;
+  const FilterCataloguesState({required this.catalogues});
   @override
   List<Object> get props => [catalogues];
 }

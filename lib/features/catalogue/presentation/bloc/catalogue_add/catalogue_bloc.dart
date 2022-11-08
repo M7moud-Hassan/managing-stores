@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mustafa/core/strings/catalogues.dart';
 import 'package:mustafa/core/strings/failures.dart';
+import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/catalogue/domain/usecases/add_catalogue.dart';
 import 'package:mustafa/features/catalogue/domain/usecases/delete_catalogue_usecase.dart';
@@ -27,21 +29,29 @@ class CatalogueBloc extends Bloc<CatalogueEvent, CatalogueState> {
     on<CatalogueEvent>((event, emit) async {
       Either result;
       if (event is AddCatalogueEvent) {
+        emit(LoadingCataloguesState(
+            changeIdSelected: event.catalogue, changeId: false));
         result = await addCatalogueUseCase(event.catalogue);
         result.fold((l) => emit(MessageErrorState(massage: _mapError(l))),
-            (r) => emit(AddedCatalogueState()));
+            (r) => emit(const AddedCatalogueState(message: ADDED_CATALOGUE)));
       } else if (event is GetCatalougesEvent) {
         result = await getCataloguesUseCase();
         result.fold((l) => emit(MessageErrorState(massage: _mapError(l))),
             (r) => emit(GetedCataloguesState(catalogues: r)));
       } else if (event is RepairNameCatalogueEvent) {
+        emit(LoadingCataloguesState(
+            changeIdSelected: event.catalogue, changeId: true));
         result = await renameCatalogue(event.catalogue);
         result.fold((l) => emit(MessageErrorState(massage: _mapError(l))),
-            (r) => emit(AddedCatalogueState()));
+            (r) => emit(const AddedCatalogueState(message: RENAMED_CATALOGUE)));
       } else if (event is DeleteCatalogueEvent) {
+        emit(LoadingCataloguesState(
+            changeIdSelected: event.catalogue, changeId: false));
         result = await deleteCatalogue(event.catalogue);
         result.fold((l) => emit(MessageErrorState(massage: _mapError(l))),
-            (r) => emit(AddedCatalogueState()));
+            (r) => emit(const AddedCatalogueState(message: DELETED_CATALOGUE)));
+      } else if (event is FilterCataloguesEvent) {
+        emit(FilterCataloguesState(catalogues: event.catalogues));
       }
     });
   }
@@ -50,8 +60,11 @@ class CatalogueBloc extends Bloc<CatalogueEvent, CatalogueState> {
     switch (failure.runtimeType) {
       case OfflineFailure:
         return OFFLINE_FAILURE_MESSAGE;
+      case CatalogueExitsFailure:
+        return CATALOGUE_EXITS_MESSAGE;
       case ServerFailure:
         return SERVER_FAILURE_MESSAGE;
+
       default:
         return SERVER_FAILURE_MESSAGE;
     }

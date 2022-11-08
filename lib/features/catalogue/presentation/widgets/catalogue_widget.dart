@@ -5,12 +5,20 @@ import 'package:mustafa/core/themes/my_colors.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/catalogue/presentation/bloc/catalogue_add/catalogue_bloc.dart';
 import 'package:mustafa/features/catalogue/presentation/widgets/sheet_bottom_add_cata.dart';
+import 'package:mustafa/features/data_market/presentation/bloc/data_market_bloc.dart';
 
 import '../../../../core/widgets/dialogs.dart';
 
 const WI_HE_CIRCLE = 40.0;
-Widget catalogueItem(title, index) => ListTile(
-      title: Text(title),
+Widget catalogueItem(Catalogue catalogue, index, idSelected, context) =>
+    ListTile(
+      onTap: () {
+        DataMarketBloc.get(context)
+            .add(SelectCatalogueEvent(catalogue: catalogue));
+      },
+      title: Text(catalogue.name),
+      selected: catalogue.id == idSelected,
+      selectedColor: SELECTED_COLOR,
       leading: Container(
         width: WI_HE_CIRCLE,
         height: WI_HE_CIRCLE,
@@ -46,22 +54,23 @@ void showSheet(context, id) {
   });
 }
 
-Widget mySlidAble(Catalogue catalogue, index, context) => Slidable(
+Widget mySlidAble(Catalogue catalogue, index, context, idSelected) => Slidable(
       startActionPane: ActionPane(motion: const ScrollMotion(), children: [
-        slidAbleAction(REPAIR_CATALOGUE, catalogue, context),
-        slidAbleAction(DELETE_CATALOGUE, catalogue, context),
+        slidAbleAction(REPAIR_CATALOGUE, catalogue, context, idSelected),
+        slidAbleAction(DELETE_CATALOGUE, catalogue, context, idSelected),
       ]),
-      child: catalogueItem(catalogue.name, index),
+      child: catalogueItem(catalogue, index, idSelected, context),
     );
 
-Widget slidAbleAction(label, Catalogue catalogue, contextBuilder) =>
+Widget slidAbleAction(label, Catalogue catalogue, contextBuilder, idSelected) =>
     SlidableAction(
       onPressed: label == DELETE_CATALOGUE
           ? (context) {
               alertDialog(contextBuilder, DELETE_CATALOGUE_TITLE,
                       DELETE_CATALOGUE_DES, () {
-                CatalogueBloc.get(contextBuilder)
-                    .add(DeleteCatalogueEvent(catalogue: catalogue));
+                CatalogueBloc.get(contextBuilder).add(DeleteCatalogueEvent(
+                    catalogue: catalogue,
+                    changeIdSelected: idSelected == catalogue.id));
               }, () {})
                   .show();
             }

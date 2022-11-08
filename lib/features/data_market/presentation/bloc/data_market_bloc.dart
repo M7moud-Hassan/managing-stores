@@ -1,9 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/error/failures.dart';
 import 'package:mustafa/core/strings/failures.dart';
+import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/features/data_market/domain/usecases/inser_item.dart';
 import 'package:mustafa/features/data_market/domain/usecases/update_item.dart';
@@ -39,14 +39,15 @@ class DataMarketBloc extends Bloc<DataMarketEvent, DataMarketState> {
         result = await updateItem(event.item);
         result.fold((l) => emit(ErrorMessageState(message: _mapError(l))),
             (r) => emit(UpdateItemState()));
-      } else if (event is GetAllItemsEvent) {
-        result = await getAllItems(event.catalogue);
+      } else if (event is SelectCatalogueEvent) {
+        emit(CloseDrawerState(selectedCatalogue: event.catalogue));
+        result = await getAllItems(event.catalogue.name);
         result.fold((l) => emit(ErrorMessageState(message: _mapError(l))),
             (r) => emit(GetAllItemsState(items: r)));
       } else if (event is OpenDrawerEvent) {
         emit(OpenDrawerState());
       } else if (event is CloseDrawerEvent) {
-        emit(CloseDrawerState());
+        emit(CloseDrawerState(selectedCatalogue: event.selectedCatalogue));
       }
     });
   }

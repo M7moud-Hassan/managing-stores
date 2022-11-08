@@ -23,7 +23,18 @@ class RepairNameCatalogueEvent extends CatalogueEvent {
 
 class DeleteCatalogueEvent extends CatalogueEvent {
   final Catalogue catalogue;
-  const DeleteCatalogueEvent({required this.catalogue});
+  final bool changeIdSelected;
+  const DeleteCatalogueEvent({
+    required this.catalogue,
+    required this.changeIdSelected,
+  });
   @override
   List<Object> get props => [catalogue];
+}
+
+class FilterCataloguesEvent extends CatalogueEvent {
+  final List<Catalogue> catalogues;
+  const FilterCataloguesEvent({required this.catalogues});
+  @override
+  List<Object> get props => [catalogues];
 }

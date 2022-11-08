@@ -27,4 +27,9 @@ class ErrorMessageState extends DataMarketState {
 
 class OpenDrawerState extends DataMarketState {}
 
-class CloseDrawerState extends DataMarketState {}
+class CloseDrawerState extends DataMarketState {
+  final Catalogue selectedCatalogue;
+  const CloseDrawerState({required this.selectedCatalogue});
+  @override
+  List<Object> get props => [selectedCatalogue];
+}

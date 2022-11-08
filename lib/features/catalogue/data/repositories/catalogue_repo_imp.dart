@@ -16,6 +16,8 @@ class CatalogueRepoImp implements CatalogueRepo {
     try {
       return Right(await localDataCatalogue
           .add(ModelCatalogue(name: catalogue.name, id: catalogue.id)));
+    } on CatalogueIsExitsException {
+      return Left(CatalogueExitsFailure());
     } on OfflineException {
       return Left(OfflineFailure());
     } on ServerException {

@@ -22,11 +22,20 @@ class UpdateItemEvent extends DataMarketEvent {
   const UpdateItemEvent({required this.item});
 }
 
-class GetAllItemsEvent extends DataMarketEvent {
-  final String catalogue;
-  const GetAllItemsEvent({required this.catalogue});
-}
-
 class OpenDrawerEvent extends DataMarketEvent {}
 
-class CloseDrawerEvent extends DataMarketEvent {}
+class CloseDrawerEvent extends DataMarketEvent {
+  final Catalogue selectedCatalogue;
+  const CloseDrawerEvent({required this.selectedCatalogue});
+  @override
+  List<Object> get props => [selectedCatalogue];
+}
+
+class SelectCatalogueEvent extends DataMarketEvent {
+  final Catalogue catalogue;
+  const SelectCatalogueEvent({
+    required this.catalogue,
+  });
+  @override
+  List<Object> get props => [catalogue];
+}
