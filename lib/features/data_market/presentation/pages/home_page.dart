@@ -8,6 +8,7 @@ import 'package:mustafa/features/data_market/presentation/pages/hello_page.dart'
 
 import '../../../catalogue/presentation/pages/drawer_catalogue_page.dart';
 import '../widgets/app_bar_home/app_bar_widget.dart';
+import 'data_grid_view.dart';
 
 const DEFAULT_ID = "-1";
 
@@ -74,7 +75,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               body: catalogue.id == DEFAULT_ID
                   ? const HelloPage()
-                  : AddItemPage(catalogue: catalogue),
+                  : DataGridView(
+                      catalogue: catalogue,
+                    ),
             ),
           ),
         );

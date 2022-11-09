@@ -9,4 +9,4 @@ const PASSS_COLOR = Colors.green;
 const SELECTED_COLOR = Colors.amber;
 const COLOR_OLD = Colors.grey;
 const COLOR_EVEN = Colors.white;
-const COLOR_HEADER = Colors.black;
+const COLOR_HEADER = Color.fromARGB(255, 33, 33, 33);

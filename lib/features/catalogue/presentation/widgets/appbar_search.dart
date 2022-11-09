@@ -12,7 +12,7 @@ AppBar appBarSearch(List<Catalogue> catalogues, context) {
     title: CupertinoTextField(
       controller: textEditingControllerSearch,
       prefix: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.close,
           color: primaryColor,
         ),

@@ -1,7 +1,7 @@
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
 
 class ItemModel extends Item {
-  const ItemModel(
+  ItemModel(
       {required super.id,
       required super.name,
       super.catalogue,

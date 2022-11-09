@@ -45,6 +45,7 @@ dependencies:
   get_it: ^7.2.0
   flutter_slidable: ^2.0.0
   awesome_dialog: ^3.0.2
+  syncfusion_flutter_datagrid: ^20.3.56
 
 dev_dependencies:
   flutter_test:

@@ -5,20 +5,23 @@ import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/features/data_market/presentation/widgets/add_item_widgets/item_widget.dart';
 
+import '../widgets/add_item_widgets/btn_modify_add.dart';
+
 class AddItemPage extends StatelessWidget {
   const AddItemPage({super.key, required this.catalogue});
   final Catalogue catalogue;
   @override
   Widget build(BuildContext context) {
     List<Item> items = [
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5),
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5),
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5),
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5),
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5),
-      const Item(id: "1", name: "item1", count: 12, cost: 12.5)
+      Item(id: "1", name: "item1", count: 12, cost: 12.5),
+      Item(id: "1", name: "item1", count: 12, cost: 12.5),
+      Item(id: "1", name: "item1", count: 12, cost: 12.5),
+      Item(id: "1", name: "item1", count: 12, cost: 12.5),
+      Item(id: "1", name: "item1", count: 12, cost: 12.5),
+      Item(id: "1", name: "item1", count: 12, cost: 12.5)
     ];
     return Scaffold(
+      floatingActionButton: const BtnAddModify(),
       body: Table(
         columnWidths: const {
           0: FlexColumnWidth(1),
