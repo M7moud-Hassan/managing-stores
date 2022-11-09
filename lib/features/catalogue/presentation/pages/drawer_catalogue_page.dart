@@ -4,7 +4,7 @@ import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/core/widgets/loading_widget.dart';
 import 'package:mustafa/core/widgets/snack_bar.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
-import 'package:mustafa/features/data_market/presentation/bloc/data_market_bloc.dart';
+import '../../../data_market/presentation/bloc/data_market/data_market_bloc.dart';
 import '../bloc/catalogue_add/catalogue_bloc.dart';
 import '../widgets/appbar_search.dart';
 import '../widgets/catalogue_widget.dart';

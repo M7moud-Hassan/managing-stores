@@ -7,21 +7,6 @@ abstract class DataMarketEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddItemEvent extends DataMarketEvent {
-  final Item item;
-  const AddItemEvent({required this.item});
-}
-
-class DeleteItemEvent extends DataMarketEvent {
-  final Item item;
-  const DeleteItemEvent({required this.item});
-}
-
-class UpdateItemEvent extends DataMarketEvent {
-  final Item item;
-  const UpdateItemEvent({required this.item});
-}
-
 class OpenDrawerEvent extends DataMarketEvent {}
 
 class CloseDrawerEvent extends DataMarketEvent {
@@ -36,6 +21,22 @@ class SelectCatalogueEvent extends DataMarketEvent {
   const SelectCatalogueEvent({
     required this.catalogue,
   });
+  @override
+  List<Object> get props => [catalogue];
+}
+
+class ShowMessageEvent extends DataMarketEvent {
+  final String message;
+  final bool isError;
+
+  const ShowMessageEvent({required this.message, required this.isError});
+  @override
+  List<Object> get props => [message, isError];
+}
+
+class GetItemsEvent extends DataMarketEvent {
+  final Catalogue catalogue;
+  const GetItemsEvent({required this.catalogue});
   @override
   List<Object> get props => [catalogue];
 }

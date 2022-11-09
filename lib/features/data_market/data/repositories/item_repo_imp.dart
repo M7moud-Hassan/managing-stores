@@ -14,7 +14,14 @@ class ItemRepoImp extends ItemRepo {
   @override
   Future<Either<Failure, Unit>> insert(Item item) async {
     try {
-      return right(await itemRemoteData.insert(item as ItemModel));
+      return right(await itemRemoteData.insert(ItemModel(
+          cost: item.cost,
+          count: item.count,
+          id: "",
+          catalogue: item.catalogue,
+          name: item.name)));
+    } on ItemExistsException {
+      return left(ItemExistsFailure());
     } on OfflineException {
       return left(OfflineFailure());
     } on ServerException {

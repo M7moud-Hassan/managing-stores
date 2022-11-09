@@ -8,17 +8,14 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Center(
-          child: SizedBox(
-            height: WID_HIGH,
-            width: WID_HIGH,
-            child: CircularProgressIndicator(
-              color: primaryColor,
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Center(
+        child: SizedBox(
+          height: WID_HIGH,
+          width: WID_HIGH,
+          child: CircularProgressIndicator(
+            color: primaryColor,
           ),
         ),
       ),

@@ -12,3 +12,4 @@ const ADD_ITEM = "اضافة عنصر";
 const EMPTY_FIELD = "املا الفراغات";
 const TYPE_INPUT_ERROR = "تأكد من العماصر المدخلة";
 const CONFIRM_DELETE_ITEM = "هل تريد فعلا حذف العنصر";
+const ADDED_ITEM = "تم اضافة العنصر";

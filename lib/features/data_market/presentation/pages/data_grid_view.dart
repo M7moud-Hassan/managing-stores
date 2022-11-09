@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/themes/my_colors.dart';
+import 'package:mustafa/core/widgets/loading_widget.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
-import 'package:mustafa/features/data_market/presentation/widgets/add_item_widgets/btn_modify_add.dart';
 import 'package:mustafa/features/data_market/presentation/widgets/grid_data_widgets/btn_add_delete_modify.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../catalogue/presentation/pages/drawer_catalogue_page.dart';
+import '../bloc/data_market/data_market_bloc.dart';
 import '../widgets/grid_data_widgets/column_name_widget.dart';
 
 const PADDING = 8.0;
@@ -18,20 +20,28 @@ class DataGridView extends StatefulWidget {
 }
 
 class _DataGridViewState extends State<DataGridView> {
-  late List<Item> _items;
+  List<Item> _items = [];
   late ItemDataSourec _itemDataSourec;
+
+  _DataGridViewState();
   @override
   void initState() {
     super.initState();
-    _items = _getItems();
-    _itemDataSourec = ItemDataSourec(items: _items);
+    _itemDataSourec = ItemDataSourec(
+        catalogue: widget.catalogue, myContext: context, items: _items);
+    _itemDataSourec.handleRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: BtnWidget.add(
-        item: Item(name: "", cost: 0.0, count: 0, id: "-1"),
+        item: Item(
+            name: "",
+            cost: 0.0,
+            count: 0,
+            id: "-1",
+            catalogue: widget.catalogue.id),
       ),
       body: SfDataGrid(
         source: _itemDataSourec,
@@ -52,29 +62,6 @@ class _DataGridViewState extends State<DataGridView> {
       ),
     );
   }
-
-  List<Item> _getItems() => [
-        Item(id: "fff", name: "item1", count: 162, cost: 145.9),
-        Item(id: "fff", name: "item2", count: 16, cost: 15.9),
-        Item(id: "fff", name: "item3", count: 222, cost: 1745.9),
-        Item(id: "fff", name: "item4", count: 92, cost: 1.9),
-        Item(id: "fff", name: "item5", count: 82, cost: 45.9),
-        Item(id: "fff", name: "item6", count: 72, cost: 5.9),
-        Item(id: "fff", name: "item7", count: 16, cost: 45.9),
-        Item(id: "fff", name: "item8", count: 15, cost: 14.9),
-        Item(id: "fff", name: "item9", count: 152, cost: 75.9),
-        Item(id: "fff", name: "item11", count: 12, cost: 75.9),
-        Item(id: "fff", name: "item1", count: 162, cost: 145.9),
-        Item(id: "fff", name: "item2", count: 16, cost: 15.9),
-        Item(id: "fff", name: "item3", count: 222, cost: 1745.9),
-        Item(id: "fff", name: "item4", count: 92, cost: 1.9),
-        Item(id: "fff", name: "item5", count: 82, cost: 45.9),
-        Item(id: "fff", name: "item6", count: 72, cost: 5.9),
-        Item(id: "fff", name: "item7", count: 16, cost: 45.9),
-        Item(id: "fff", name: "item8", count: 15, cost: 14.9),
-        Item(id: "fff", name: "item9", count: 152, cost: 75.9),
-        Item(id: "fff", name: "item11", count: 12, cost: 75.9)
-      ];
 }
 
 const COLUMN1 = "id";
@@ -84,7 +71,18 @@ const COLUMN4 = "count";
 
 class ItemDataSourec extends DataGridSource {
   static int squ = 0;
-  ItemDataSourec({required List<Item> items}) {
+  final Catalogue catalogue;
+  final BuildContext myContext;
+  List<Item> items;
+  ItemDataSourec({
+    required this.items,
+    required this.catalogue,
+    required this.myContext,
+  }) {
+    buildDataGridRows();
+  }
+
+  void buildDataGridRows() {
     _dataGridRows = items
         .map<DataGridRow>((item) => DataGridRow(cells: [
               DataGridCell<int>(columnName: COLUMN1, value: ++squ),
@@ -95,11 +93,18 @@ class ItemDataSourec extends DataGridSource {
         .toList();
   }
 
+  void updateDataGridSource() {
+    notifyListeners();
+  }
+
   @override
   Future<void> handleRefresh() async {
     await Future.delayed(const Duration(seconds: NUM_SECOND));
-
-    notifyListeners();
+    items = [Item(id: "", name: "name", count: 0, cost: 0.0)];
+    squ = 0;
+    buildDataGridRows();
+    updateDataGridSource();
+    //notifyListeners();
   }
 
   List<DataGridRow> _dataGridRows = [];

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
-import 'package:mustafa/features/data_market/presentation/bloc/data_market_bloc.dart';
+import 'package:mustafa/features/data_market/presentation/bloc/data_market/data_market_bloc.dart';
 
 AppBar appBarHome(AnimationController controller, isDrawerOpen, context,
         Catalogue catalogue) =>

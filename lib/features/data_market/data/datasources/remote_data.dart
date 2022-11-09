@@ -5,6 +5,10 @@ import 'package:mustafa/features/data_market/data/models/item_model.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_info.dart';
 
+const COLLECTION_1 = "cataloguse";
+
+const COLLECTION_2 = "items";
+
 abstract class ItemRemoteData {
   Future<Unit> insert(ItemModel itemModel);
   Future<Unit> delete(ItemModel itemModel);
@@ -21,13 +25,19 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> insert(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      try {
-        firebaseFirestore
-            .collection(itemModel.catalogue)
-            .add(itemModel.toJson());
-        return Future.value(unit);
-      } catch (e) {
-        throw ServerException();
+      if (!await _checkExists(itemModel.name, itemModel.catalogue)) {
+        try {
+          firebaseFirestore
+              .collection(COLLECTION_1)
+              .doc(itemModel.catalogue)
+              .collection(COLLECTION_2)
+              .add(itemModel.toJson());
+          return Future.value(unit);
+        } catch (e) {
+          throw ServerException();
+        }
+      } else {
+        throw ItemExistsException();
       }
     } else {
       throw OfflineException();
@@ -72,8 +82,11 @@ class ItemRemoteDataImp extends ItemRemoteData {
   Future<List<ItemModel>> getAllItems(String catalogue) async {
     if (await networkInfo.isConnected) {
       try {
-        QuerySnapshot<Map<String, dynamic>> result =
-            await firebaseFirestore.collection(catalogue).get();
+        QuerySnapshot<Map<String, dynamic>> result = await firebaseFirestore
+            .collection(COLLECTION_1)
+            .doc(catalogue)
+            .collection(COLLECTION_2)
+            .get();
         for (var element in result.docChanges) {
           _items.add(ItemModel.fromJson(
               element.doc.data()!, catalogue, element.doc.id));
@@ -84,6 +97,22 @@ class ItemRemoteDataImp extends ItemRemoteData {
       }
     } else {
       throw OfflineException();
+    }
+  }
+
+  Future<bool> _checkExists(name, docId) async {
+    try {
+      AggregateQuerySnapshot query = await firebaseFirestore
+          .collection(COLLECTION_1)
+          .doc(docId)
+          .collection(COLLECTION_2)
+          .where("name", isEqualTo: name)
+          .count()
+          .get();
+
+      return query.count > 0;
+    } catch (e) {
+      throw ServerException();
     }
   }
 }

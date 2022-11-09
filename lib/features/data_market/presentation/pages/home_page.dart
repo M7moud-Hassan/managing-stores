@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
-import 'package:mustafa/features/data_market/presentation/bloc/data_market_bloc.dart';
-import 'package:mustafa/features/data_market/presentation/pages/add_items_page.dart';
 import 'package:mustafa/features/data_market/presentation/pages/hello_page.dart';
 
+import '../../../../core/widgets/snack_bar.dart';
 import '../../../catalogue/presentation/pages/drawer_catalogue_page.dart';
+import '../bloc/data_market/data_market_bloc.dart';
 import '../widgets/app_bar_home/app_bar_widget.dart';
 import 'data_grid_view.dart';
 
@@ -51,6 +51,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             _globalKey.currentState!.closeDrawer();
             _animationController.reverse();
+          });
+        } else if (state is ShowMessageSuccefulState) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showPassSnackBar(message: state.message, context: context);
+          });
+        } else if (state is ErrorMessageState) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showErrorSnackBar(message: state.message, context: context);
           });
         }
         return Directionality(

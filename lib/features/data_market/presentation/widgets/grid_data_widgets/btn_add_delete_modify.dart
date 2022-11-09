@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/core/widgets/dialogs.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
+import 'package:mustafa/features/data_market/presentation/bloc/add_delete_modify_item/add_delete_update_bloc.dart';
 import 'package:mustafa/features/data_market/presentation/widgets/grid_data_widgets/form_sheet.dart';
 
 class BtnWidget extends StatelessWidget {
@@ -67,7 +68,11 @@ class BtnWidget extends StatelessWidget {
             autoDismiss: false,
             onDismissCallback: (type) {},
             btnOkOnPress: () {
-              if (_formState.currentState!.validate()) {}
+              if (_formState.currentState!.validate()) {
+                // DataMarketBloc.get(myContext).add(AddItemEvent(item: item));
+                AddDeleteUpdateBloc.get(myContext)
+                    .add(AddItemEvent(item: item));
+              }
             },
             btnOkText: SAVE,
             btnCancelOnPress: () {
