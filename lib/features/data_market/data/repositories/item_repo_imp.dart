@@ -33,6 +33,8 @@ class ItemRepoImp extends ItemRepo {
   Future<Either<Failure, Unit>> updateItem(Item item) async {
     try {
       return right(await itemRemoteData.update(item as ItemModel));
+    } on ItemExistsException {
+      return left(ItemExistsFailure());
     } on OfflineException {
       return left(OfflineFailure());
     } on ServerException {

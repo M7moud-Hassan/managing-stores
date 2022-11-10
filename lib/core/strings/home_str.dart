@@ -1,6 +1,7 @@
 const TITLE_APP = "ادارة المخازن";
 const NAME_ITEM = "اسم العنصر";
 const COST = "التكلفة";
+const ALL_COST = "التكلفة الكلية";
 const COUNT = "العدد";
 const ESQUENCES = "م";
 const ADD_MODFY = "اضافة او تعديل عنصر";
@@ -13,3 +14,6 @@ const EMPTY_FIELD = "املا الفراغات";
 const TYPE_INPUT_ERROR = "تأكد من العماصر المدخلة";
 const CONFIRM_DELETE_ITEM = "هل تريد فعلا حذف العنصر";
 const ADDED_ITEM = "تم اضافة العنصر";
+const UPDATE_ITEM = "تم تعديل العنصر";
+const DELETED_ITEM = "تم مسح العنصر";
+const INVOICE_OPEN = "اصدار فاتورة";

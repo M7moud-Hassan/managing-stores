@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/home_str.dart';
-import 'package:mustafa/core/strings/messages.dart';
 import 'package:mustafa/core/widgets/divider.dart';
 import 'package:mustafa/core/widgets/loading_widget.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
@@ -23,14 +22,17 @@ class FormWidget extends StatelessWidget {
         if (state is LoadAddedItemState) {
           return const LoadingWidget();
         } else if (state is AddedItemState) {
-          DataMarketBloc.get(context)
-              .add(const ShowMessageEvent(message: ADDED_ITEM, isError: false));
+          DataMarketBloc.get(context).add(ShowMessageEvent(
+              message: "$ADDED_ITEM ${state.item.name}", isError: false));
           item.cost = 0.0;
           item.name = "";
           item.count = 0;
         } else if (state is ErrorMessageStateAdd) {
           DataMarketBloc.get(context)
               .add(ShowMessageEvent(message: state.message, isError: true));
+        } else if (state is UpdateItemState) {
+          DataMarketBloc.get(context).add(ShowMessageEvent(
+              message: "$UPDATE_ITEM ${state.item.name}", isError: false));
         }
         return _form();
       },

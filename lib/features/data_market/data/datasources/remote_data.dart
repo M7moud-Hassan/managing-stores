@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:mustafa/features/data_market/data/models/item_model.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -8,6 +9,7 @@ import '../../../../core/network/network_info.dart';
 const COLLECTION_1 = "cataloguse";
 
 const COLLECTION_2 = "items";
+const NOT_FOUND = "not-found";
 
 abstract class ItemRemoteData {
   Future<Unit> insert(ItemModel itemModel);
@@ -47,14 +49,22 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> update(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      try {
-        firebaseFirestore
-            .collection(itemModel.catalogue)
-            .doc(itemModel.id)
-            .update(itemModel.toJson());
-        return Future.value(unit);
-      } catch (e) {
-        throw ServerException();
+      if (!await _checkExists(itemModel.name, itemModel.catalogue)) {
+        try {
+          firebaseFirestore
+              .collection(COLLECTION_1)
+              .doc(itemModel.catalogue)
+              .collection(COLLECTION_2)
+              .doc(itemModel.id)
+              .update(itemModel.toJson());
+          return Future.value(unit);
+        } on PlatformException {
+          throw ItemExistsException();
+        } catch (e) {
+          throw ServerException();
+        }
+      } else {
+        throw ItemExistsException();
       }
     } else {
       throw OfflineException();
@@ -66,12 +76,18 @@ class ItemRemoteDataImp extends ItemRemoteData {
     if (await networkInfo.isConnected) {
       try {
         firebaseFirestore
-            .collection(itemModel.catalogue)
+            .collection(COLLECTION_1)
+            .doc(itemModel.catalogue)
+            .collection(COLLECTION_2)
             .doc(itemModel.id)
             .delete();
         return Future.value(unit);
-      } catch (e) {
-        throw ServerException();
+      } on FirebaseException catch (e) {
+        if (e.code == NOT_FOUND) {
+          throw ItemExistsException();
+        } else {
+          throw ServerException();
+        }
       }
     } else {
       throw OfflineException();
@@ -80,6 +96,7 @@ class ItemRemoteDataImp extends ItemRemoteData {
 
   @override
   Future<List<ItemModel>> getAllItems(String catalogue) async {
+    _items = [];
     if (await networkInfo.isConnected) {
       try {
         QuerySnapshot<Map<String, dynamic>> result = await firebaseFirestore
@@ -87,9 +104,8 @@ class ItemRemoteDataImp extends ItemRemoteData {
             .doc(catalogue)
             .collection(COLLECTION_2)
             .get();
-        for (var element in result.docChanges) {
-          _items.add(ItemModel.fromJson(
-              element.doc.data()!, catalogue, element.doc.id));
+        for (var element in result.docs) {
+          _items.add(ItemModel.fromJson(element.data(), catalogue, element.id));
         }
         return _items;
       } catch (e) {

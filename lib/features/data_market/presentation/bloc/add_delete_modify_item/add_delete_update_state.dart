@@ -8,13 +8,23 @@ abstract class AddDeleteUpdateState extends Equatable {
 
 class DataMarketInitial extends AddDeleteUpdateState {}
 
-class AddedItemState extends AddDeleteUpdateState {}
+class AddedItemState extends AddDeleteUpdateState {
+  final Item item;
+
+  const AddedItemState({required this.item});
+  @override
+  List<Object> get props => [item];
+}
 
 class LoadAddedItemState extends AddDeleteUpdateState {}
 
-class DeleteItemState extends AddDeleteUpdateState {}
+class UpdateItemState extends AddDeleteUpdateState {
+  final Item item;
 
-class UpdateItemState extends AddDeleteUpdateState {}
+  UpdateItemState({required this.item});
+  @override
+  List<Object> get props => [item];
+}
 
 class ErrorMessageStateAdd extends AddDeleteUpdateState {
   final String message;
@@ -22,3 +32,5 @@ class ErrorMessageStateAdd extends AddDeleteUpdateState {
   @override
   List<Object> get props => [message];
 }
+
+class CloseDialogStata extends AddDeleteUpdateState {}

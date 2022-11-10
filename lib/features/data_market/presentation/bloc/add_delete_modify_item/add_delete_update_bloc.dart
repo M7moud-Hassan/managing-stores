@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/messages.dart';
 import 'package:mustafa/features/data_market/domain/usecases/update_item.dart';
 
-import '../../../../../core/error/failures.dart';
-import '../../../../../core/strings/failures.dart';
+import '../../../../../core/methods/map_failure_string.dart';
+import '../../../../../core/strings/home_str.dart';
 import '../../../domain/entities/item.dart';
 import '../../../domain/usecases/delete_item.dart';
 import '../../../domain/usecases/inser_item.dart';
@@ -30,30 +31,27 @@ class AddDeleteUpdateBloc
       if (event is AddItemEvent) {
         emit(LoadAddedItemState());
         result = await insertItem(event.item);
-        result.fold((l) => emit(ErrorMessageStateAdd(message: _mapError(l))),
-            (r) => emit(AddedItemState()));
+        result.fold(
+            (l) => emit(ErrorMessageStateAdd(
+                message: mapError(l) == ITEM_EXITS
+                    ? "${event.item.name} $ITEM_EXITS"
+                    : mapError(l))),
+            (r) => emit(AddedItemState(item: event.item)));
       } else if (event is DeleteItemEvent) {
         result = await itemDelete(event.item);
-        result.fold((l) => emit(ErrorMessageStateAdd(message: _mapError(l))),
-            (r) => emit(DeleteItemState()));
+        result.fold((l) => emit(ErrorMessageStateAdd(message: mapError(l))),
+            (r) {
+          DataMarketBloc.get(event.context).add(ShowMessageEvent(
+              message: "$DELETED_ITEM ${event.item.name}", isError: false));
+        });
       } else if (event is UpdateItemEvent) {
+        emit(LoadAddedItemState());
         result = await updateItem(event.item);
-        result.fold((l) => emit(ErrorMessageStateAdd(message: _mapError(l))),
-            (r) => emit(UpdateItemState()));
+        result.fold((l) => emit(ErrorMessageStateAdd(message: mapError(l))),
+            (r) => emit(UpdateItemState(item: event.item)));
       }
     });
   }
-  static AddDeleteUpdateBloc get(context) => BlocProvider.of(context);
-  String _mapError(Failure failure) {
-    switch (failure.runtimeType) {
-      case ItemExistsFailure:
-        return ITEM_EXITS;
-      case OfflineFailure:
-        return OFFLINE_FAILURE_MESSAGE;
-      case ServerFailure:
-        return SERVER_FAILURE_MESSAGE;
-      default:
-        return SERVER_FAILURE_MESSAGE;
-    }
-  }
+  static AddDeleteUpdateBloc get(context) =>
+      BlocProvider.of<AddDeleteUpdateBloc>(context);
 }

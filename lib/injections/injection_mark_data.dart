@@ -19,7 +19,7 @@ Future<void> init() async {
 // Bloc
   sl.registerFactory(() => AddDeleteUpdateBloc(
       insertItem: sl(), updateItem: sl(), itemDelete: sl()));
-  sl.registerFactory(() => DataMarketBloc(getAllItems: sl()));
+  sl.registerFactory(() => DataMarketBloc());
 // Usecases
   sl.registerLazySingleton(() => InsertItem(itemRepo: sl()));
   sl.registerLazySingleton(() => UpdateItem(itemRepo: sl()));

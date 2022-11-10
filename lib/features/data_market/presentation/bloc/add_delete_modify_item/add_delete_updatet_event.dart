@@ -16,10 +16,18 @@ class AddItemEvent extends AddDeleteUpdateEvent {
 
 class DeleteItemEvent extends AddDeleteUpdateEvent {
   final Item item;
-  const DeleteItemEvent({required this.item});
+  final BuildContext context;
+  const DeleteItemEvent({
+    required this.item,
+    required this.context,
+  });
+  @override
+  List<Object> get props => [item, context];
 }
 
 class UpdateItemEvent extends AddDeleteUpdateEvent {
   final Item item;
   const UpdateItemEvent({required this.item});
+  @override
+  List<Object> get props => [item];
 }
