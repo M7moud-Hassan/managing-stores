@@ -46,6 +46,9 @@ dependencies:
   flutter_slidable: ^2.0.0
   awesome_dialog: ^3.0.2
   syncfusion_flutter_datagrid: ^20.3.56
+  dropdown_search: ^5.0.3
+  syncfusion_flutter_datagrid_export: ^20.3.56-beta
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:

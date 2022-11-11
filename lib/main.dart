@@ -8,8 +8,11 @@ import 'features/catalogue/presentation/bloc/catalogue_add/catalogue_bloc.dart';
 import 'features/data_market/presentation/bloc/add_delete_modify_item/add_delete_update_bloc.dart';
 import 'features/data_market/presentation/bloc/data_market/data_market_bloc.dart';
 import 'features/data_market/presentation/pages/home_page.dart';
+import 'features/invoice/presentation/bloc/add_item_invoice/add_item_invoice_bloc.dart';
+import 'features/invoice/presentation/bloc/invoice/invoice_bloc.dart';
 import 'injections/injection_mark_data.dart' as di;
 import 'injections/injection_catalogue.dart' as di2;
+import 'injections/injection_read_data.dart' as di3;
 import 'injections/injection_mark_data.dart';
 
 void main() async {
@@ -18,6 +21,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await di.init();
   await di2.init();
+  await di3.init();
   runApp(const MyApp());
 }
 
@@ -38,6 +42,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<DataMarketBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<AddItemInvoiceBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => InvoiceBloc(),
         ),
       ],
       child: MaterialApp(

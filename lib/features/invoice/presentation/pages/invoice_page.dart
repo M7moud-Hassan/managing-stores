@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/bill_strings.dart';
+import 'package:mustafa/core/strings/home_str.dart';
+import 'package:mustafa/core/widgets/dialogs.dart';
+import 'package:mustafa/core/widgets/snack_bar.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
-import 'package:mustafa/features/data_market/presentation/pages/data_grid_view.dart';
 import 'package:mustafa/features/invoice/domain/entities/bill.dart';
 import 'package:mustafa/features/invoice/domain/entities/bill_holder.dart';
+import 'package:mustafa/features/invoice/presentation/bloc/invoice/invoice_bloc.dart';
+import 'package:mustafa/features/invoice/presentation/widgets/add_to_invoice.dart/add_to_invoice_widget.dart';
 import 'package:mustafa/features/invoice/presentation/widgets/invoice_widgets/text_field_widget.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:collection/collection.dart';
 
 import '../../../../core/themes/my_colors.dart';
+import '../widgets/app_bar_widget/add_items_invoice.dart';
 import '../widgets/app_bar_widget/app_bar.dart';
 import '../widgets/invoice_widgets/column_names.dart';
+import '../widgets/invoice_widgets/delete_item_widget.dart';
 import '../widgets/summary_rows/summary_row_widget.dart';
 
 const String NAME_COUNT = "itemCount";
@@ -26,6 +33,8 @@ class InvoicePage extends StatefulWidget {
 class _InvoicePageState extends State<InvoicePage> {
   late BillSorces _billSorces;
   final DataGridController _dataGridController = DataGridController();
+  final GlobalKey<ScaffoldState> _scafoldKey = GlobalKey();
+  final GlobalKey<SfDataGridState> sdKey = GlobalKey<SfDataGridState>();
   @override
   void initState() {
     super.initState();
@@ -34,28 +43,71 @@ class _InvoicePageState extends State<InvoicePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: appBarBill(),
-        body: SfDataGrid(
-          tableSummaryRows: [
-            summatyRowWidget(TITLE_COUNT, NAME_COUNT, COLUMN1,
-                GridSummaryType.count, GridTableSummaryRowPosition.top),
-            summatyRowWidget(TITLE_TOTAL_COST, NAME_TOTAL, COLUMN5,
-                GridSummaryType.sum, GridTableSummaryRowPosition.bottom),
-          ],
-          source: _billSorces,
-          allowEditing: true,
-          selectionMode: SelectionMode.single,
-          navigationMode: GridNavigationMode.cell,
-          controller: _dataGridController,
-          columns: columnsNameBill(context),
-          allowSorting: true,
-          allowFiltering: true,
-          frozenColumnsCount: 1,
-          allowSwiping: true,
-          allowPullToRefresh: true,
+    return BlocListener<InvoiceBloc, InvoiceState>(
+      listener: (context, state) {
+        if (state is ShowErrorMessageInvoiceSatae) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showErrorSnackBar(
+                message: state.message,
+                context: context,
+                padding: state.padding);
+          });
+        } else if (state is AddItemToBill) {
+          _billSorces.addBill(state.bill);
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showPassSnackBar(
+                message: ADDED_BILL, context: context, padding: HEIGTH_PADDING);
+          });
+        }
+      },
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          key: _scafoldKey,
+          appBar: appBarBill(context, widget.billHolder, sdKey),
+          floatingActionButton: AddButnItemInvoice(
+            scafoldKey: _scafoldKey,
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.startDocked,
+          body: SfDataGrid(
+            key: sdKey,
+            tableSummaryRows: [
+              summatyRowWidget(TITLE_COUNT, NAME_COUNT, COLUMN1,
+                  GridSummaryType.count, GridTableSummaryRowPosition.top),
+              summatyRowWidget(TITLE_TOTAL_COST, NAME_TOTAL, COLUMN5,
+                  GridSummaryType.sum, GridTableSummaryRowPosition.bottom),
+            ],
+            source: _billSorces,
+            allowEditing: true,
+            selectionMode: SelectionMode.single,
+            navigationMode: GridNavigationMode.cell,
+            controller: _dataGridController,
+            columns: columnsNameBill(context),
+            allowSorting: true,
+            allowFiltering: true,
+            frozenColumnsCount: 1,
+            allowSwiping: true,
+            allowPullToRefresh: true,
+            endSwipeActionsBuilder: (context, dataGridRow, rowIndex) {
+              return deleteItemBill(Icons.delete, DELETED_ITEM, Colors.red, () {
+                alertDialog(context, DELETED_ITEM, CONFIRM_DELETE_ITEM, () {
+                  _billSorces.deleteBill(
+                      (dataGridRow.getCells()[0].value.toInt()) - 1);
+                }, () {})
+                    .show();
+              });
+            },
+            startSwipeActionsBuilder: (context, dataGridRow, rowIndex) {
+              return deleteItemBill(Icons.delete, DELETED_ITEM, Colors.red, () {
+                alertDialog(context, DELETED_ITEM, CONFIRM_DELETE_ITEM, () {
+                  _billSorces.deleteBill(
+                      (dataGridRow.getCells()[0].value.toInt()) - 1);
+                }, () {})
+                    .show();
+              });
+            },
+          ),
         ),
       ),
     );
@@ -75,33 +127,18 @@ class BillSorces extends DataGridSource {
   TextEditingController editingController = TextEditingController();
   final BuildContext context;
   BillSorces({required this.context}) {
-    _bills = [
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12),
-      Bill.add(Item(id: "", name: "asd", count: 12, cost: 2.5), 12)
-    ];
+    _bills = [];
     buildDataGridRows();
   }
 
+  addBill(Bill bill) {
+    _bills.add(bill);
+    buildDataGridRows();
+    updateDataGridSource();
+  }
+
   void buildDataGridRows() {
+    squ = 0;
     _dataGridRows = _bills
         .map<DataGridRow>((bill) => DataGridRow(cells: [
               DataGridCell<int>(columnName: COLUMN1, value: ++squ),
@@ -193,6 +230,12 @@ class BillSorces extends DataGridSource {
 
   void updateDataGridSource() {
     notifyListeners();
+  }
+
+  deleteBill(int index) {
+    _bills.removeAt(index);
+    buildDataGridRows();
+    updateDataGridSource();
   }
 
   List<DataGridRow> _dataGridRows = [];

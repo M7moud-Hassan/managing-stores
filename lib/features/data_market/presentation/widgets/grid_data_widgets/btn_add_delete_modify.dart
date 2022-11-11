@@ -52,7 +52,7 @@ class BtnWidget extends StatelessWidget {
             () => alertDialog(context, DELETE_ITEM, CONFIRM_DELETE_ITEM, () {
                   AddDeleteUpdateBloc.get(myContext)
                       .add(DeleteItemEvent(item: item, context: myContext));
-                  itemDataSourec.handleRefresh();
+                  // itemDataSourec.handleRefresh();
                 }, () {})
                     .show());
       default:
@@ -85,6 +85,7 @@ class BtnWidget extends StatelessWidget {
             body: FormWidget(
               item: item,
               formKey: formState,
+              itemDataSourec: itemDataSourec,
             ),
             autoDismiss: false,
             onDismissCallback: (type) {},
@@ -99,7 +100,7 @@ class BtnWidget extends StatelessWidget {
                       .add(UpdateItemEvent(item: item));
                 }
               }
-              itemDataSourec.handleRefresh();
+              //itemDataSourec.handleRefresh();
             },
             btnOkText: SAVE,
             btnCancelOnPress: () {

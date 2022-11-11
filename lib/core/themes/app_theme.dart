@@ -6,14 +6,13 @@ const primaryColor = Color(0xff082659);
 const secondaryColor = Color(0xff51eec2);
 final appTheme = ThemeData(
   textTheme: const TextTheme(
-      titleLarge: TextStyle(
-          fontSize: FONT_LARGE,
-          fontWeight: FontWeight.w700,
-          color: Colors.white),
-      titleMedium: TextStyle(
-          fontSize: FONT_BODY1,
-          fontWeight: FontWeight.normal,
-          color: Colors.black)),
+    titleLarge: TextStyle(
+        fontSize: FONT_LARGE, fontWeight: FontWeight.w700, color: Colors.white),
+    titleMedium: TextStyle(
+        fontSize: FONT_BODY1,
+        fontWeight: FontWeight.normal,
+        color: Colors.black),
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: primaryColor,
     centerTitle: true,

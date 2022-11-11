@@ -27,7 +27,7 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> insert(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      if (!await _checkExists(itemModel.name, itemModel.catalogue)) {
+      if (!await _checkExists(itemModel)) {
         try {
           firebaseFirestore
               .collection(COLLECTION_1)
@@ -49,7 +49,7 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> update(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      if (!await _checkExists(itemModel.name, itemModel.catalogue)) {
+      /*if (!await _checkExists(itemModel)) {
         try {
           firebaseFirestore
               .collection(COLLECTION_1)
@@ -65,7 +65,10 @@ class ItemRemoteDataImp extends ItemRemoteData {
         }
       } else {
         throw ItemExistsException();
-      }
+      }*/
+      await delete(itemModel);
+      await insert(itemModel);
+      return Future.value(unit);
     } else {
       throw OfflineException();
     }
@@ -116,13 +119,13 @@ class ItemRemoteDataImp extends ItemRemoteData {
     }
   }
 
-  Future<bool> _checkExists(name, docId) async {
+  Future<bool> _checkExists(ItemModel itemModel) async {
     try {
       AggregateQuerySnapshot query = await firebaseFirestore
           .collection(COLLECTION_1)
-          .doc(docId)
+          .doc(itemModel.catalogue)
           .collection(COLLECTION_2)
-          .where("name", isEqualTo: name)
+          .where("name", isEqualTo: itemModel.name)
           .count()
           .get();
 

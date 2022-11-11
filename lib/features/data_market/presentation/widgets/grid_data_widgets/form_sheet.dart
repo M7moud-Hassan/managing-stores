@@ -5,6 +5,7 @@ import 'package:mustafa/core/widgets/divider.dart';
 import 'package:mustafa/core/widgets/loading_widget.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/features/data_market/presentation/bloc/data_market/data_market_bloc.dart';
+import 'package:mustafa/features/data_market/presentation/pages/data_grid_view.dart';
 
 import '../../bloc/add_delete_modify_item/add_delete_update_bloc.dart';
 
@@ -12,8 +13,13 @@ const RADUS = 20.0;
 const PADDING = 8.0;
 
 class FormWidget extends StatelessWidget {
-  const FormWidget({super.key, required this.formKey, required this.item});
+  const FormWidget(
+      {super.key,
+      required this.formKey,
+      required this.item,
+      required this.itemDataSourec});
   final GlobalKey<FormState> formKey;
+  final ItemDataSourec itemDataSourec;
   final Item item;
   @override
   Widget build(BuildContext context) {
@@ -27,12 +33,14 @@ class FormWidget extends StatelessWidget {
           item.cost = 0.0;
           item.name = "";
           item.count = 0;
+          itemDataSourec.handleRefresh();
         } else if (state is ErrorMessageStateAdd) {
           DataMarketBloc.get(context)
               .add(ShowMessageEvent(message: state.message, isError: true));
         } else if (state is UpdateItemState) {
           DataMarketBloc.get(context).add(ShowMessageEvent(
               message: "$UPDATE_ITEM ${state.item.name}", isError: false));
+          itemDataSourec.handleRefresh();
         }
         return _form();
       },

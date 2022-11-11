@@ -11,3 +11,4 @@ const COLOR_OLD = Colors.grey;
 const COLOR_EVEN = Colors.white;
 const COLOR_HEADER = Color.fromARGB(255, 33, 33, 33);
 const COLOR_SUMMARY_ROW = Color.fromARGB(255, 39, 38, 38);
+const COLOR_MENU_CATALOGUE_SELECT = Color.fromARGB(255, 53, 52, 52);
