@@ -1,16 +1,40 @@
-# mustafa
+# Managing Stores
 
-A new Flutter project.
+<p align="center">
+  <img src="./images/1.png" width="350" title="hover text">
+  <img src="./images/2.png" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+   <img src="./images/3.jpg" width="350" title="hover text">
+  <img src="./images/4.jpg" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+  <img src="./images/5.jpg" width="350" title="hover text">
+  <img src="./images/6.jpg" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+   <img src="./images/7.jpg" width="350" title="hover text">
+  <img src="./images/8.jpg" width="350" alt="accessibility text">
+</p>
+<p align="center">
+  <img src="./images/9.jpg" width="350" title="hover text">
+  <img src="./images/10.jpg" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+   <img src="./images/11.jpg" width="350" title="hover text">
+  <img src="./images/12.jpg" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+  <img src="./images/13.jpg" width="350" title="hover text">
+  <img src="./images/14.jpg" width="350" alt="accessibility text">
+</p>
+<hr/>
+<p align="center">
+   <img src="./images/15.jpg" width="350" title="hover text">
+</p>
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
