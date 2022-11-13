@@ -19,6 +19,7 @@ class Invoice {
   final List<Bill> bills;
   final BillHolder billHolder;
   final PdfDocument document = PdfDocument();
+  late String FullPath;
   Invoice({
     required this.path,
     required this.bills,
@@ -53,8 +54,12 @@ class Invoice {
     document.dispose();
     //Launch file.
     // await File('$path/invoice.pdf').writeAsBytes(bytes);
-    await FileSaveHelper.saveAndLaunchFile(bytes, 'Invoice.pdf');
+
+    FullPath = "${billHolder.name}_${DateTime.now()}.pdf";
+    FullPath = await FileSaveHelper.saveAndLaunchFile(bytes, FullPath);
   }
+
+  String get getFullPath => FullPath;
 
   //Draws the invoice header
   Future<PdfLayoutResult> _drawHeader(

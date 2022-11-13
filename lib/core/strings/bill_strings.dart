@@ -12,3 +12,4 @@ const String EXTRACT_AS_PDF = "استخراج الفاتورة pdf";
 const String NAME_FOLDER = "invoices";
 const String ADDRESS_LABEL = "العنوان";
 const String ADDRESS_HINT = "مصر / سوهاج / ساقلتة / الطوايل الشرقية";
+const String ALL_INVOICES = "الفواتير";

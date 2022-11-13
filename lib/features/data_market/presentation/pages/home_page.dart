@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
-import 'package:mustafa/features/data_market/presentation/pages/hello_page.dart';
 
+import '../../../../core/widgets/hello_page.dart';
 import '../../../../core/widgets/snack_bar.dart';
 import '../../../catalogue/presentation/pages/drawer_catalogue_page.dart';
 import '../bloc/data_market/data_market_bloc.dart';

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:open_file/open_file.dart';
 
 ///Package imports
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -12,10 +11,8 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 // ignore: avoid_classes_with_only_static_members
 ///To save the pdf file in the device
 class FileSaveHelper {
-  static const MethodChannel _platformCall = MethodChannel('launchFile');
-
   ///To save the pdf file in the device
-  static Future<void> saveAndLaunchFile(
+  static Future<String> saveAndLaunchFile(
       List<int> bytes, String fileName) async {
     String? path;
     if (Platform.isAndroid ||
@@ -31,9 +28,6 @@ class FileSaveHelper {
         File(Platform.isWindows ? '$path\\$fileName' : '$path/$fileName');
     await file.writeAsBytes(bytes, flush: true);
     if (Platform.isAndroid || Platform.isIOS) {
-      final Map<String, String> argument = <String, String>{
-        'file_path': '$path/$fileName'
-      };
       try {
         await OpenFile.open('$path/$fileName');
         //File('$path/$fileName').delete();
@@ -41,7 +35,7 @@ class FileSaveHelper {
         //final Future<Map<String, String>?> result =
         //   _platformCall.invokeMethod('viewPdf', argument);
       } catch (e) {
-        throw Exception(e);
+        // throw Exception(e);
       }
     } else if (Platform.isWindows) {
       await Process.run('start', <String>['$path\\$fileName'],
@@ -52,5 +46,6 @@ class FileSaveHelper {
       await Process.run('xdg-open', <String>['$path/$fileName'],
           runInShell: true);
     }
+    return "$path/$fileName";
   }
 }

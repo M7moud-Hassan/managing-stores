@@ -21,7 +21,7 @@ class ShowErrorMessageInvoiceSatae extends InvoiceState {
   List<Object> get props => [message, padding];
 }
 
-class FinshExportInvoice extends InvoiceState {}
+class FinshExportInvoiceState extends InvoiceState {}
 
 class StartExportInvoiceState extends InvoiceState {}
 
@@ -39,4 +39,12 @@ class AddItemToBill extends InvoiceState {
   const AddItemToBill({required this.bill});
   @override
   List<Object> get props => [bill];
+}
+
+class ErrorDuringUploadState extends InvoiceState {
+  final String message;
+
+  const ErrorDuringUploadState({required this.message});
+  @override
+  List<Object> get props => [message];
 }

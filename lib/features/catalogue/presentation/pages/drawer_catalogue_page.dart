@@ -4,6 +4,7 @@ import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/core/widgets/loading_widget.dart';
 import 'package:mustafa/core/widgets/snack_bar.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
+import 'package:mustafa/features/data_market/presentation/pages/home_page.dart';
 import '../../../data_market/presentation/bloc/data_market/data_market_bloc.dart';
 import '../bloc/catalogue_add/catalogue_bloc.dart';
 import '../widgets/appbar_search.dart';
@@ -38,7 +39,7 @@ class DrawerCataloguePage extends StatelessWidget {
             context.read<DataMarketBloc>().add(SelectCatalogueEvent(
                 catalogue: catalogues.isNotEmpty
                     ? catalogues.first
-                    : const Catalogue(name: TITLE_APP, id: "")));
+                    : const Catalogue(name: TITLE_APP, id: DEFAULT_ID)));
           }
         } else if (state is MessageErrorState) {
           showProgress = false;

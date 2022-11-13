@@ -110,6 +110,7 @@ class FormWidget extends StatelessWidget {
                 return TYPE_INPUT_ERROR;
               }
           }
+          return null;
         },
         decoration: InputDecoration(
           hintText: label,

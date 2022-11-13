@@ -1,13 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mustafa/features/catalogue/presentation/bloc/catalogue_add/catalogue_bloc.dart';
 
-import '../../../../../core/error/failures.dart';
-import '../../../../../core/strings/failures.dart';
 import '../../../../catalogue/domain/entities/catalogue.dart';
 import '../../../domain/entities/item.dart';
-import '../../../domain/usecases/get_all_items.dart';
 
 part 'data_market_event.dart';
 part 'data_market_state.dart';
@@ -15,13 +10,8 @@ part 'data_market_state.dart';
 class DataMarketBloc extends Bloc<DataMarketEvent, DataMarketState> {
   DataMarketBloc() : super(DataMarketInitial()) {
     on<DataMarketEvent>((event, emit) async {
-      Either result;
       if (event is SelectCatalogueEvent) {
         emit(CloseDrawerState(selectedCatalogue: event.catalogue));
-        //emit(LoadedItemsDataState());
-        // result = await getAllItems(event.catalogue.id);
-        //result.fold((l) => emit(ErrorMessageState(message: _mapError(l))),
-        //  (r) => emit(GetAllItemsState(items: r)));
       } else if (event is OpenDrawerEvent) {
         emit(OpenDrawerState());
       } else if (event is CloseDrawerEvent) {

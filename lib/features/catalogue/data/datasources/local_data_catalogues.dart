@@ -24,7 +24,7 @@ class LocalDataCatalogueImp implements LocalDataCatalogue {
   @override
   Future<Unit> add(ModelCatalogue modelCatalogue) async {
     if (await networkInfo.isConnected) {
-      if (!await _checkExists(modelCatalogue.name)) {
+      if (await _checkExists(modelCatalogue.name)) {
         try {
           await firebaseFirestore
               .collection(COLLECTION)
@@ -97,13 +97,12 @@ class LocalDataCatalogueImp implements LocalDataCatalogue {
 
   Future<bool> _checkExists(name) async {
     try {
-      AggregateQuerySnapshot query = await firebaseFirestore
+      QuerySnapshot<Map<String, dynamic>> query = await firebaseFirestore
           .collection(COLLECTION)
           .where("name", isEqualTo: name)
-          .count()
           .get();
 
-      return query.count > 0;
+      return query.docChanges.isEmpty;
     } catch (e) {
       throw ServerException();
     }

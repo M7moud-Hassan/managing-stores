@@ -6,24 +6,27 @@ const primaryColor = Color(0xff082659);
 const secondaryColor = Color(0xff51eec2);
 final appTheme = ThemeData(
   textTheme: const TextTheme(
-    titleLarge: TextStyle(
-        fontSize: FONT_LARGE, fontWeight: FontWeight.w700, color: Colors.white),
-    titleMedium: TextStyle(
-        fontSize: FONT_BODY1,
-        fontWeight: FontWeight.normal,
-        color: Colors.black),
-  ),
+      titleLarge: TextStyle(
+          fontSize: FONT_LARGE,
+          fontWeight: FontWeight.w700,
+          color: Colors.white),
+      titleMedium: TextStyle(
+          fontSize: FONT_BODY1,
+          fontWeight: FontWeight.normal,
+          color: Colors.black),
+      displayLarge: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+      displayMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
   appBarTheme: const AppBarTheme(
     backgroundColor: primaryColor,
     centerTitle: true,
   ),
   brightness: Brightness.light,
   primaryColor: primaryColor,
-  colorScheme: ColorScheme.light(
+  colorScheme: const ColorScheme.light(
     primary: primaryColor,
   ),
-  progressIndicatorTheme: ProgressIndicatorThemeData(color: primaryColor),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  progressIndicatorTheme: const ProgressIndicatorThemeData(color: primaryColor),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: primaryColor,
     foregroundColor: secondaryColor,
   ),

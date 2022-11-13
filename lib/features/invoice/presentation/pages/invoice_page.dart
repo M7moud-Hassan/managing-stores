@@ -79,12 +79,22 @@ class _InvoicePageState extends State<InvoicePage> {
               bills: state.billsDone,
               billHolder: widget.billHolder);
           await invoice.generatePDF();
+          InvoiceBloc.get(context).add(UploadInvoiceEvent(
+              fullPath: invoice.FullPath, billHolder: widget.billHolder));
           _billSorces.clear(state.billsDone);
-          Navigator.pop(context);
-          InvoiceBloc.get(context).emit(FinshExportInvoice());
+          //Navigator.pop(context);
+          //InvoiceBloc.get(context).emit(FinshExportInvoice());
         } else if (state is StartExportInvoiceState) {
+          InvoiceBloc.get(context).add(ExportInvoiceEvent(_billSorces._bills));
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             loadExportWidget(context).show();
+          });
+        } else if (state is FinshExportInvoiceState) {
+          Navigator.pop(context);
+        } else if (state is ErrorDuringUploadState) {
+          Navigator.pop(context);
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            showErrorSnackBar(message: state.message, context: context);
           });
         }
       },
@@ -92,7 +102,7 @@ class _InvoicePageState extends State<InvoicePage> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           key: _scafoldKey,
-          appBar: appBarBill(context, widget.billHolder, _billSorces._bills),
+          appBar: appBarBill(context, widget.billHolder),
           floatingActionButton: AddButnItemInvoice(
             scafoldKey: _scafoldKey,
           ),

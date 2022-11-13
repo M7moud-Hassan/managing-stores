@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/catalogues.dart';
+import 'package:mustafa/core/themes/app_theme.dart';
 import 'package:mustafa/core/themes/my_colors.dart';
 import 'package:mustafa/features/catalogue/domain/entities/catalogue.dart';
 import 'package:mustafa/features/catalogue/presentation/bloc/sheet_catalogue/sheet_add_catalogue_bloc.dart';
@@ -31,7 +32,7 @@ class SheetAdd extends StatelessWidget {
               Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  color: Colors.blueGrey,
+                  color: primaryColor,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20)),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mustafa/core/themes/app_theme.dart';
 import 'package:mustafa/core/themes/my_colors.dart';
 
 Widget headerSheet(String title, BuildContext context, Function onSave) =>
     Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: Colors.blueGrey,
+        color: primaryColor,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),

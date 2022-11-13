@@ -33,3 +33,15 @@ class ExportInvoiceEvent extends InvoiceEvent {
   @override
   List<Object> get props => [bills];
 }
+
+class UploadInvoiceEvent extends InvoiceEvent {
+  final String fullPath;
+  final BillHolder billHolder;
+
+  const UploadInvoiceEvent({
+    required this.fullPath,
+    required this.billHolder,
+  });
+  @override
+  List<Object> get props => [fullPath];
+}

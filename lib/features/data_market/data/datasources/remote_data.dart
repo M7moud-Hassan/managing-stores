@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
-import 'package:mustafa/core/error/failures.dart';
 import 'package:mustafa/features/data_market/data/models/item_model.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -30,7 +29,7 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> insert(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      if (!await _checkExists(itemModel)) {
+      if (await _checkExists(itemModel)) {
         try {
           firebaseFirestore
               .collection(COLLECTION_1)
@@ -124,15 +123,14 @@ class ItemRemoteDataImp extends ItemRemoteData {
 
   Future<bool> _checkExists(ItemModel itemModel) async {
     try {
-      AggregateQuerySnapshot query = await firebaseFirestore
+      QuerySnapshot<Map<String, dynamic>> query = await firebaseFirestore
           .collection(COLLECTION_1)
           .doc(itemModel.catalogue)
           .collection(COLLECTION_2)
           .where("name", isEqualTo: itemModel.name)
-          .count()
           .get();
 
-      return query.count > 0;
+      return query.docChanges.isEmpty;
     } catch (e) {
       throw ServerException();
     }
