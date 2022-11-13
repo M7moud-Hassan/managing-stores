@@ -49,6 +49,9 @@ class AddDeleteUpdateBloc
         result = await updateItem(event.item);
         result.fold((l) => emit(ErrorMessageStateAdd(message: mapError(l))),
             (r) => emit(UpdateItemState(item: event.item)));
+      } else if (event is CloseDialogEvent) {
+        emit(CloseDialogStata());
+        Navigator.pop(event.context);
       }
     });
   }

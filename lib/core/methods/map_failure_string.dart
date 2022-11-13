@@ -5,6 +5,8 @@ import '../strings/failures.dart';
 
 String mapError(Failure failure) {
   switch (failure.runtimeType) {
+    case CountItemNotenoughFailure:
+      return COUNT_ITEM_NOT_ENOUGH;
     case ItemExistsFailure:
       return ITEM_EXITS;
     case OfflineFailure:

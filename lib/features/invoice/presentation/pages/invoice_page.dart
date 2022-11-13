@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mustafa/core/strings/bill_strings.dart';
 import 'package:mustafa/core/strings/home_str.dart';
+import 'package:mustafa/core/strings/messages.dart';
 import 'package:mustafa/core/widgets/dialogs.dart';
 import 'package:mustafa/core/widgets/snack_bar.dart';
-import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/features/invoice/domain/entities/bill.dart';
 import 'package:mustafa/features/invoice/domain/entities/bill_holder.dart';
 import 'package:mustafa/features/invoice/presentation/bloc/invoice/invoice_bloc.dart';
 import 'package:mustafa/features/invoice/presentation/widgets/add_to_invoice.dart/add_to_invoice_widget.dart';
+import 'package:mustafa/features/invoice/presentation/widgets/invoice_widgets/load_export_widget.dart';
 import 'package:mustafa/features/invoice/presentation/widgets/invoice_widgets/text_field_widget.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:collection/collection.dart';
 
+import '../../../../core/methods/app_util.dart';
+import '../../../../core/methods/invoice.dart';
 import '../../../../core/themes/my_colors.dart';
 import '../widgets/app_bar_widget/add_items_invoice.dart';
 import '../widgets/app_bar_widget/app_bar.dart';
@@ -44,7 +47,7 @@ class _InvoicePageState extends State<InvoicePage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<InvoiceBloc, InvoiceState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is ShowErrorMessageInvoiceSatae) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             showErrorSnackBar(
@@ -53,10 +56,35 @@ class _InvoicePageState extends State<InvoicePage> {
                 padding: state.padding);
           });
         } else if (state is AddItemToBill) {
-          _billSorces.addBill(state.bill);
+          if (_billSorces.contains(state.bill)) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              showErrorSnackBar(
+                  message: '${state.bill.item.name} $ITEM_EXITS',
+                  context: context,
+                  padding: HEIGTH_PADDING);
+            });
+          } else {
+            _billSorces.addBill(state.bill);
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              showPassSnackBar(
+                  message: ADDED_BILL,
+                  context: context,
+                  padding: HEIGTH_PADDING);
+            });
+          }
+        } else if (state is ExportInvoiceState) {
+          String path = await AppUtil.getFont();
+          Invoice invoice = Invoice(
+              path: path,
+              bills: state.billsDone,
+              billHolder: widget.billHolder);
+          await invoice.generatePDF();
+          _billSorces.clear(state.billsDone);
+          Navigator.pop(context);
+          InvoiceBloc.get(context).emit(FinshExportInvoice());
+        } else if (state is StartExportInvoiceState) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            showPassSnackBar(
-                message: ADDED_BILL, context: context, padding: HEIGTH_PADDING);
+            loadExportWidget(context).show();
           });
         }
       },
@@ -64,7 +92,7 @@ class _InvoicePageState extends State<InvoicePage> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           key: _scafoldKey,
-          appBar: appBarBill(context, widget.billHolder, sdKey),
+          appBar: appBarBill(context, widget.billHolder, _billSorces._bills),
           floatingActionButton: AddButnItemInvoice(
             scafoldKey: _scafoldKey,
           ),
@@ -130,6 +158,24 @@ class BillSorces extends DataGridSource {
     _bills = [];
     buildDataGridRows();
   }
+  clear(List<Bill> billDone) {
+    if (_bills.length == billDone.length) {
+      _bills = [];
+    } else {
+      for (Bill b in billDone) {
+        _bills.remove(b);
+      }
+    }
+    buildDataGridRows();
+    updateDataGridSource();
+  }
+
+  bool contains(Bill bill) {
+    for (var element in _bills) {
+      if (element.item.name == bill.item.name) return true;
+    }
+    return false;
+  }
 
   addBill(Bill bill) {
     _bills.add(bill);
@@ -168,14 +214,26 @@ class BillSorces extends DataGridSource {
       if (column.columnName == COLUMN3) {
         try {
           newCellValue = int.parse(editingController.text);
-          return true;
+          if (newCellValue >= 0 &&
+              newCellValue <=
+                  _bills[(dataGridRow.getCells()[0].value.toInt()) - 1]
+                      .item
+                      .count) {
+            return true;
+          } else {
+            return false;
+          }
         } catch (e) {
           return false;
         }
       } else {
         try {
           newCellValue = double.parse(editingController.text);
-          return true;
+          if (newCellValue > 0) {
+            return true;
+          } else {
+            return false;
+          }
         } catch (e) {
           return false;
         }

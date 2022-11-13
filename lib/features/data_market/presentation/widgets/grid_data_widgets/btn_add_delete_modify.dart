@@ -4,6 +4,7 @@ import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/core/widgets/dialogs.dart';
 import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/features/data_market/presentation/bloc/add_delete_modify_item/add_delete_update_bloc.dart';
+import 'package:mustafa/features/data_market/presentation/bloc/data_market/data_market_bloc.dart';
 import 'package:mustafa/features/data_market/presentation/pages/data_grid_view.dart';
 import 'package:mustafa/features/data_market/presentation/pages/home_page.dart';
 import 'package:mustafa/features/data_market/presentation/widgets/grid_data_widgets/form_sheet.dart';
@@ -52,7 +53,7 @@ class BtnWidget extends StatelessWidget {
             () => alertDialog(context, DELETE_ITEM, CONFIRM_DELETE_ITEM, () {
                   AddDeleteUpdateBloc.get(myContext)
                       .add(DeleteItemEvent(item: item, context: myContext));
-                  // itemDataSourec.handleRefresh();
+                  itemDataSourec.handleRefresh();
                 }, () {})
                     .show());
       default:
@@ -77,6 +78,7 @@ class BtnWidget extends StatelessWidget {
       );
 
   void _showSheet(context, Item item) {
+    DataMarketBloc.get(context).emit(OpenDialogState());
     GlobalKey<FormState> formState = GlobalKey<FormState>();
     AwesomeDialog(
             context: context,
@@ -85,7 +87,6 @@ class BtnWidget extends StatelessWidget {
             body: FormWidget(
               item: item,
               formKey: formState,
-              itemDataSourec: itemDataSourec,
             ),
             autoDismiss: false,
             onDismissCallback: (type) {},
@@ -108,7 +109,8 @@ class BtnWidget extends StatelessWidget {
               Navigator.pop(myContext);
             },
             btnCancelText: CANCEL)
-        .show();
+        .show()
+        .whenComplete(() => itemDataSourec.handleRefresh());
   }
 }
 

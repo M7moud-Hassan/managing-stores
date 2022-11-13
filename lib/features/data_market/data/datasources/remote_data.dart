@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
+import 'package:mustafa/core/error/failures.dart';
 import 'package:mustafa/features/data_market/data/models/item_model.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../invoice/domain/entities/bill.dart';
 
 const COLLECTION_1 = "cataloguse";
 
@@ -15,6 +17,7 @@ abstract class ItemRemoteData {
   Future<Unit> insert(ItemModel itemModel);
   Future<Unit> delete(ItemModel itemModel);
   Future<Unit> update(ItemModel itemModel);
+  Future<Unit> updateForInvoice(Bill bill);
   Future<List<ItemModel>> getAllItems(String catalogue);
 }
 
@@ -49,9 +52,9 @@ class ItemRemoteDataImp extends ItemRemoteData {
   @override
   Future<Unit> update(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
-      /*if (!await _checkExists(itemModel)) {
+      if (!await _checkForUpdate(itemModel)) {
         try {
-          firebaseFirestore
+          await firebaseFirestore
               .collection(COLLECTION_1)
               .doc(itemModel.catalogue)
               .collection(COLLECTION_2)
@@ -65,10 +68,10 @@ class ItemRemoteDataImp extends ItemRemoteData {
         }
       } else {
         throw ItemExistsException();
-      }*/
-      await delete(itemModel);
-      await insert(itemModel);
-      return Future.value(unit);
+      }
+      // await delete(itemModel);
+      //await insert(itemModel);
+      //return Future.value(unit);
     } else {
       throw OfflineException();
     }
@@ -78,7 +81,7 @@ class ItemRemoteDataImp extends ItemRemoteData {
   Future<Unit> delete(ItemModel itemModel) async {
     if (await networkInfo.isConnected) {
       try {
-        firebaseFirestore
+        await firebaseFirestore
             .collection(COLLECTION_1)
             .doc(itemModel.catalogue)
             .collection(COLLECTION_2)
@@ -132,6 +135,59 @@ class ItemRemoteDataImp extends ItemRemoteData {
       return query.count > 0;
     } catch (e) {
       throw ServerException();
+    }
+  }
+
+  Future<bool> _checkForUpdate(ItemModel itemModel) async {
+    QuerySnapshot<Map<String, dynamic>> result = await firebaseFirestore
+        .collection(COLLECTION_1)
+        .doc(itemModel.catalogue)
+        .collection(COLLECTION_2)
+        .where("name", isEqualTo: itemModel.name)
+        .get();
+    if (result.docs.isEmpty) {
+      return false;
+    } else {
+      ItemModel itemModel1 = ItemModel.fromJson(
+          result.docs.first.data(), itemModel.catalogue, result.docs.first.id);
+      return !(itemModel1.id == itemModel.id);
+    }
+  }
+
+  late ItemModel itemModel;
+  late DocumentSnapshot<Map<String, dynamic>> result;
+  int count = 0;
+  @override
+  Future<Unit> updateForInvoice(Bill bill) async {
+    //ItemModel(ملح, منتجات غذائية, 99, 2.0, MOpbxJJ04RjJXLzWxERw)
+    if (await networkInfo.isConnected) {
+      try {
+        result = await firebaseFirestore
+            .collection(COLLECTION_1)
+            .doc(bill.item.catalogue)
+            .collection(COLLECTION_2)
+            .doc(bill.item.id)
+            .get();
+        itemModel = ItemModel.fromJson(
+            result.data()!, bill.item.catalogue, bill.item.id);
+        count = itemModel.count;
+        count -= bill.count;
+        if (count < 0) throw ItemCountNotenoughException();
+        itemModel.count = count;
+        await firebaseFirestore
+            .collection(COLLECTION_1)
+            .doc(itemModel.catalogue)
+            .collection(COLLECTION_2)
+            .doc(itemModel.id)
+            .update(itemModel.toJson());
+        return Future.value(unit);
+      } on PlatformException {
+        throw ItemExistsException();
+      } catch (e) {
+        throw ServerException();
+      }
+    } else {
+      throw OfflineException();
     }
   }
 }

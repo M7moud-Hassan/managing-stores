@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mustafa/core/strings/home_str.dart';
 import 'package:mustafa/features/data_market/presentation/widgets/pop_up_menu/bill_holder_add_widget.dart';
@@ -11,8 +12,12 @@ class MyPopUpMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      itemBuilder: (context) =>
-          [itemMenu(Icons.request_page_rounded, INVOICE_OPEN, POP_ITEM1)],
+      itemBuilder: (context) => [
+        itemMenu(ItemMenuParameter(
+            iconData: Icons.request_page_rounded,
+            data: INVOICE_OPEN,
+            value: POP_ITEM1))
+      ],
       onSelected: (value) {
         switch (value) {
           case POP_ITEM1:
@@ -23,18 +28,23 @@ class MyPopUpMenu extends StatelessWidget {
   }
 
   void showSheet(context) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return BillAdd();
-      },
-    ).whenComplete(() {
-      // textEditingController.text = ""; //clear text in field
-    });
+    BillAdd billAdd = BillAdd();
+    AwesomeDialog(
+            context: context,
+            animType: AnimType.scale,
+            dialogType: DialogType.noHeader,
+            body: billAdd,
+            autoDismiss: false,
+            onDismissCallback: (type) {},
+            btnOkOnPress: () {
+              billAdd.openInvoice(context);
+            },
+            btnOkText: SAVE,
+            btnCancelOnPress: () {
+              Navigator.pop(context);
+            },
+            btnCancelText: CANCEL)
+        .show()
+        .whenComplete(() => null);
   }
 }

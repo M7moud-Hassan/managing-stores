@@ -13,6 +13,10 @@ class Item extends Equatable {
     required this.count,
     required this.cost,
   });
+  void reduceCount(int num) {
+    count = count - num;
+  }
+
   @override
-  List<Object?> get props => [name, catalogue, count, cost];
+  List<Object?> get props => [name, catalogue, count, cost, id];
 }

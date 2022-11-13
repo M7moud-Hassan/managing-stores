@@ -26,3 +26,10 @@ class AddItemBillEvent extends InvoiceEvent {
   @override
   List<Object> get props => [bill];
 }
+
+class ExportInvoiceEvent extends InvoiceEvent {
+  final List<Bill> bills;
+  const ExportInvoiceEvent(this.bills);
+  @override
+  List<Object> get props => [bills];
+}

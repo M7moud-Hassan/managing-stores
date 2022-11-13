@@ -6,6 +6,10 @@ abstract class AddDeleteUpdateState extends Equatable {
   List<Object> get props => [];
 }
 
+class CloseDialogState extends AddDeleteUpdateState {
+  const CloseDialogState();
+}
+
 class DataMarketInitial extends AddDeleteUpdateState {}
 
 class AddedItemState extends AddDeleteUpdateState {
@@ -21,7 +25,7 @@ class LoadAddedItemState extends AddDeleteUpdateState {}
 class UpdateItemState extends AddDeleteUpdateState {
   final Item item;
 
-  UpdateItemState({required this.item});
+  const UpdateItemState({required this.item});
   @override
   List<Object> get props => [item];
 }

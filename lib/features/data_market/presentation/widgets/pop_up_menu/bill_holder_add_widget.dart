@@ -10,79 +10,73 @@ import '../../../../invoice/presentation/pages/invoice_page.dart';
 
 class BillAdd extends StatelessWidget {
   BillAdd({super.key});
-  BillHolder billHolder = BillHolder(name: "", phone: "");
+  BillHolder billHolder = BillHolder(name: "", phone: "", address: "");
+  final GlobalKey<FormState> _keyForm = GlobalKey();
+  final address = RegExp(r'^(.+/.+)+$');
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Padding(
-        padding: MediaQuery.of(context).viewInsets,
+      child: SingleChildScrollView(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Colors.blueGrey,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            ),
-            child: Row(
-              children: [
-                const Expanded(
-                    child: Text(
-                  BILL_HOLDER_ADD,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                )),
-                //btn click to save catalogue get name catalogue
-                saveCataloge(context),
-              ],
-            ),
-          ),
-          mySizeBox,
-          _filedBill(BILL_HOLDER_NAME),
-          mySizeBox,
-          _filedBill(BILL_HOLDER_PHONE),
-          mySizeBox,
+          Form(
+              key: _keyForm,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _filedBill(BILL_HOLDER_NAME, BILL_HOLDER_NAME, billHolder),
+                  // mySizeBox,
+                  _filedBill(ADDRESS_LABEL, ADDRESS_HINT, billHolder),
+                  // mySizeBox,
+                  _filedBill(BILL_HOLDER_PHONE, BILL_HOLDER_PHONE, billHolder),
+                  // mySizeBox,
+                ],
+              ))
         ]),
       ),
     );
   }
 
-  Widget _filedBill(String label) {
+  Widget _filedBill(String label, String hint, BillHolder holder) {
     return Padding(
       padding: const EdgeInsets.all(PADDING),
-      child: TextField(
-        onChanged: (value) {
-          if (label == BILL_HOLDER_NAME) {
-            billHolder.name = value;
+      child: TextFormField(
+        keyboardType: label == BILL_HOLDER_PHONE
+            ? TextInputType.phone
+            : TextInputType.text,
+        decoration: InputDecoration(hintText: hint, labelText: label),
+        validator: (value) {
+          if (value.toString().isEmpty) {
+            return EMPTY_FIELD;
+          } else if (label == ADDRESS_LABEL) {
+            if (address.hasMatch(value.toString())) {
+              billHolder.address = value.toString();
+              return null;
+            } else {
+              return ADDRESS_ERROR;
+            }
           } else {
-            billHolder.phone = value;
+            if (label == BILL_HOLDER_NAME) {
+              billHolder.name = value.toString();
+              return null;
+            } else {
+              billHolder.phone = value.toString();
+              return null;
+            }
           }
         },
-        decoration: InputDecoration(
-          hintText: label,
-          labelText: label,
-        ),
       ),
     );
   }
 
-  Widget saveCataloge(context) => IconButton(
-      onPressed: () {
-        if (billHolder.name.isEmpty || billHolder.phone.isEmpty) {
-          // DataMarketBloc.get(context)
-          //    .add(const ShowMessageEvent(message: EMPTY_FIELD, isError: true));
-        } else {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => InvoicePage(billHolder: billHolder)),
-          );
-        }
-      },
-      icon: const Icon(
-        Icons.add,
-        color: BTN_SAVE,
-      ));
+  void openInvoice(context) {
+    if (_keyForm.currentState!.validate()) {
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => InvoicePage(billHolder: billHolder)),
+      );
+    }
+  }
 }

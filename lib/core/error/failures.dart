@@ -24,5 +24,10 @@ class CatalogueExitsFailure extends Failure {
 
 class ItemExistsFailure extends Failure {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
+}
+
+class CountItemNotenoughFailure extends Failure {
+  @override
+  List<Object?> get props => [];
 }

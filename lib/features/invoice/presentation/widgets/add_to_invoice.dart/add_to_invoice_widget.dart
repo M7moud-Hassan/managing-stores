@@ -78,7 +78,8 @@ class AddToInVoice extends StatelessWidget {
         String editText = editingController.text;
         if (editingController.text.isNotEmpty && itemSelect != null) {
           try {
-            if (int.parse(editText) <= itemSelect.count) {
+            if (int.parse(editText) <= itemSelect.count &&
+                int.parse(editText) >= 0) {
               InvoiceBloc.get(context).add(AddItemBillEvent(
                   bill: Bill.add(_dropDownKey.currentState!.getSelectedItem,
                       int.parse(editingController.text))));

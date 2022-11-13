@@ -18,3 +18,4 @@ const UPDATE_ITEM = "تم تعديل العنصر";
 const DELETED_ITEM = "تم مسح العنصر";
 const INVOICE_OPEN = "اصدار فاتورة";
 const String NOT_CORRECT_NUMBER = "خطأ في عدد الكمية";
+const String ADDRESS_ERROR = "خطأ في العنوان";

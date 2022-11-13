@@ -5,6 +5,7 @@ import 'package:mustafa/features/data_market/domain/entities/item.dart';
 import 'package:mustafa/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mustafa/features/data_market/domain/repositories/item_repo.dart';
+import 'package:mustafa/features/invoice/domain/entities/bill.dart';
 
 class ItemRepoImp extends ItemRepo {
   final ItemRemoteData itemRemoteData;
@@ -57,6 +58,21 @@ class ItemRepoImp extends ItemRepo {
   Future<Either<Failure, List<Item>>> getAllItems(String catalogue) async {
     try {
       return right(await itemRemoteData.getAllItems(catalogue));
+    } on OfflineException {
+      return left(OfflineFailure());
+    } on ServerException {
+      return left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateItemForInvoice(Bill bill) async {
+    try {
+      return right(await itemRemoteData.updateForInvoice(bill));
+    } on ItemCountNotenoughException {
+      return Left(CountItemNotenoughFailure());
+    } on ItemExistsException {
+      return left(ItemExistsFailure());
     } on OfflineException {
       return left(OfflineFailure());
     } on ServerException {

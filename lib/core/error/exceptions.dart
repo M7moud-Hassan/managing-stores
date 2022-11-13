@@ -7,3 +7,5 @@ class OfflineException implements Exception {}
 class CatalogueIsExitsException implements Exception {}
 
 class ItemExistsException implements Exception {}
+
+class ItemCountNotenoughException implements Exception {}

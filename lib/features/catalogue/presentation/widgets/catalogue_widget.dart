@@ -8,6 +8,7 @@ import 'package:mustafa/features/catalogue/presentation/widgets/sheet_bottom_add
 import 'package:mustafa/features/data_market/presentation/bloc/data_market/data_market_bloc.dart';
 
 import '../../../../core/widgets/dialogs.dart';
+import '../bloc/sheet_catalogue/sheet_add_catalogue_bloc.dart';
 
 const WI_HE_CIRCLE = 40.0;
 Widget catalogueItem(Catalogue catalogue, index, idSelected, context) =>
@@ -50,7 +51,9 @@ void showSheet(context, id) {
       );
     },
   ).whenComplete(() {
-    textEditingController.text = ""; //clear text in field
+    textEditingController.text = "";
+    SheetAddCatalogueBloc.get(context)
+        .add(const ChangeLengthTextEvent(length: 0)); //clear text in field
   });
 }
 

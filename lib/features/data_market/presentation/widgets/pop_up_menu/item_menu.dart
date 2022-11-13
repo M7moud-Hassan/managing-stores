@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 
-PopupMenuItem itemMenu(IconData icon, String data, int value) => PopupMenuItem(
-    value: value,
+PopupMenuItem itemMenu(ItemMenuParameter parameter) => PopupMenuItem(
+    value: parameter.value,
     child: Row(
       children: [
         Icon(
-          icon,
+          parameter.iconData,
           color: Colors.black,
         ),
         Expanded(
             child: Text(
-          data,
+          parameter.data,
           textAlign: TextAlign.right,
         ))
       ],
     ));
+
+class ItemMenuParameter {
+  final IconData iconData;
+  final String data;
+  final int value;
+
+  ItemMenuParameter(
+      {required this.iconData, required this.data, required this.value});
+}

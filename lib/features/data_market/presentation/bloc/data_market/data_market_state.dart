@@ -23,6 +23,8 @@ class ShowMessageSuccefulState extends DataMarketState {
   List<Object> get props => [message];
 }
 
+class OpenDialogState extends DataMarketState {}
+
 class OpenDrawerState extends DataMarketState {}
 
 class CloseDrawerState extends DataMarketState {

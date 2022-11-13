@@ -31,3 +31,11 @@ class UpdateItemEvent extends AddDeleteUpdateEvent {
   @override
   List<Object> get props => [item];
 }
+
+class CloseDialogEvent extends AddDeleteUpdateEvent {
+  final BuildContext context;
+
+  const CloseDialogEvent({required this.context});
+  @override
+  List<Object> get props => [context];
+}

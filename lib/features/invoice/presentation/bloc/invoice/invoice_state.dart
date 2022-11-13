@@ -21,6 +21,18 @@ class ShowErrorMessageInvoiceSatae extends InvoiceState {
   List<Object> get props => [message, padding];
 }
 
+class FinshExportInvoice extends InvoiceState {}
+
+class StartExportInvoiceState extends InvoiceState {}
+
+class ExportInvoiceState extends InvoiceState {
+  final List<Bill> billsDone;
+
+  const ExportInvoiceState({required this.billsDone});
+  @override
+  List<Object> get props => [billsDone];
+}
+
 class AddItemToBill extends InvoiceState {
   final Bill bill;
 

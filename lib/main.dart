@@ -22,6 +22,7 @@ void main() async {
   await di.init();
   await di2.init();
   await di3.init();
+
   runApp(const MyApp());
 }
 
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<AddItemInvoiceBloc>(),
         ),
         BlocProvider(
-          create: (context) => InvoiceBloc(),
+          create: (context) => sl<InvoiceBloc>(),
         ),
       ],
       child: MaterialApp(

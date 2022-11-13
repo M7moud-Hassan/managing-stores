@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mustafa/core/themes/my_colors.dart';
+import 'package:mustafa/features/data_market/presentation/pages/data_grid_view.dart';
 
 void showErrorSnackBar(
-    {required String message, required BuildContext context, padding = 0}) {
+    {required String message,
+    required BuildContext context,
+    double padding = PADDING}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,
@@ -14,7 +17,9 @@ void showErrorSnackBar(
 }
 
 void showPassSnackBar(
-    {required String message, required BuildContext context, padding = 0}) {
+    {required String message,
+    required BuildContext context,
+    double padding = PADDING}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,

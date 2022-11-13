@@ -38,8 +38,8 @@ class DataRemoteImp extends DataRemote {
               .collection(COLLECTION_2)
               .get();
           for (var element2 in result2.docs) {
-            _itemModels.add(ItemModel.fromJson(element2.data(),
-                element.data()[INDEX_JSON_CATALOGUE_NAME], element2.id));
+            _itemModels.add(
+                ItemModel.fromJson(element2.data(), element.id, element2.id));
           }
           _data.add(ModelCatalogueData.create(
               element.data(), element.id, _itemModels));
