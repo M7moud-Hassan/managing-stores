@@ -1,8 +1,8 @@
 # Managing Stores
 
 <p align="center">
-  <img src="./images/1.png" width="350" title="hover text">
-  <img src="./images/2.png" width="350" alt="accessibility text">
+  <img src="./images/1.jpg" width="350" title="hover text">
+  <img src="./images/2.jpg" width="350" alt="accessibility text">
 </p>
 <hr/>
 <p align="center">
